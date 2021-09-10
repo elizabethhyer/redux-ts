@@ -2,13 +2,28 @@ import React, { useState } from "react";
 import { useSelector } from "../hooks/useTypedSelector";
 import { useActions } from "../hooks/useActions";
 import styled from "styled-components";
-import { TextArea } from "@blueprintjs/core";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 80vh;
   width: 80vw;
+`;
+
+const SearchInput = styled.input`
+  width: 50%;
+  height: 2rem;
+  border-radius: 10px;
+  border: 1px solid grey;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0px 0px 2px black;
+  }
+`;
+
+const ListOutput = styled.div`
+  padding: 3rem;
 `;
 
 const List = styled.div`
@@ -29,19 +44,24 @@ const RepositoriesList: React.FC = () => {
   return (
     <Container>
       <form onSubmit={onSubmit}>
-        <TextArea value={term} onChange={(e) => setTerm(e.target.value)} />
-        {/* <input value={term} onChange={(e) => setTerm(e.target.value)} /> */}
-        <button>Search</button>
+        <SearchInput
+          placeholder="Search..."
+          value={term}
+          type="search"
+          onChange={(e) => setTerm(e.target.value)}
+        />
       </form>
-      {error && <h3>{error}</h3>}
-      {loading && <h3>Loading...</h3>}
-      {!error && !loading && (
-        <List>
-          {data.map((name) => (
-            <li>{name}</li>
-          ))}
-        </List>
-      )}
+      <ListOutput>
+        {error && <h3>{error}</h3>}
+        {loading && <h3>Loading...</h3>}
+        {!error && !loading && (
+          <List>
+            {data.length
+              ? data.map((name) => <li>{name}</li>)
+              : "Sorry, we didn't find any packages matching your search. Please try again."}
+          </List>
+        )}
+      </ListOutput>
     </Container>
   );
 };
